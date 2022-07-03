@@ -2,9 +2,10 @@ import Terminal, { ColorMode, LineType } from "react-terminal-ui";
 import React, { useState } from "react";
 import { experiences } from "./experiences";
 import { schools } from "./schools.js";
-//import "./App.css";
+import { projects } from "./projects";
+import "./App.css";
 const historyOfCommands = [];
-let historyOfResponses = [
+const historyOfResponses = [
   {
     type: LineType.Output,
     value:
@@ -13,6 +14,17 @@ let historyOfResponses = [
 ];
 
 const App = (props) => {
+  // @ts-ignore
+  historyOfResponses.clear = function () {
+    this.length = 1;
+    return [
+      {
+        type: LineType.Output,
+        value:
+          "Hi! You found my portfolio, please type help to find out which commands you can type 💻",
+      },
+    ];
+  };
   const [terminalLineData, setTerminalLineData] = useState(historyOfResponses);
   document.title = "Fares's Portfolio";
   // Terminal has 100% width by default so it should usually be wrapped in a container div
@@ -33,11 +45,12 @@ const App = (props) => {
             historyOfResponses.push({
               type: LineType.Output,
               value:
-                "There are 3 different commands: \n" +
+                "There are several commands: \n" +
                 "- profile: to talk about myself and who I am 👤\n" +
                 "- exp: where I present my professional experiences 💼\n" +
                 "- school: where I present my academic path 🏫.\n" +
-                "- clear: to clear the terminal 🧹",
+                "- clear: to clear the terminal 🧹\n" +
+                "- proj: to see my projects 💻\n",
             });
             setTerminalLineData(historyOfResponses);
             break;
@@ -113,9 +126,56 @@ const App = (props) => {
             setTerminalLineData(historyOfResponses);
             break;
           case terminalInput === "clear":
-            historyOfResponses = [];
-            setTerminalLineData(historyOfResponses);
+            setTerminalLineData(historyOfResponses.clear());
             break;
+          case terminalInput.startsWith("proj"):
+            const projectName = terminalInput.split(" ")[1];
+            if (projectName) {
+              const foundProject = projects.find(
+                (project) => project.name === projectName
+              );
+              if (foundProject) {
+                historyOfResponses.push(
+                  {
+                    type: LineType.Output,
+                    value: `${foundProject.title}`,
+                  },
+                  {
+                    type: LineType.Output,
+                    value: `• ${foundProject.description}`,
+                  },
+                  {
+                    type: LineType.Output,
+                    value: `• Stack: ${foundProject.stack}`,
+                  },
+                  {
+                    type: LineType.Output,
+                    // @ts-ignore
+                    value: <a href={foundProject.github}>• GitHub 💻</a>,
+                  }
+                );
+                setTerminalLineData(historyOfResponses);
+                break;
+              } else {
+                historyOfResponses.push({
+                  type: LineType.Output,
+                  value:
+                    "Sorry, I don't know about this project 😢. Please type proj to find out which ones I have worked on 💻",
+                });
+                setTerminalLineData(historyOfResponses);
+                break;
+              }
+            } else {
+              const projectTitles = projects.map((project) => {
+                return {
+                  type: LineType.Output,
+                  value: project.title,
+                };
+              });
+              historyOfResponses.push(...projectTitles);
+              setTerminalLineData(historyOfResponses);
+              break;
+            }
           default:
             historyOfResponses.push({
               type: LineType.Output,
