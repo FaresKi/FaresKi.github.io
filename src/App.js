@@ -1,10 +1,10 @@
 import Terminal, { ColorMode, LineType } from "react-terminal-ui";
-import { useState } from "react";
+import React, { useState } from "react";
 import { experiences } from "./experiences";
 import { schools } from "./schools.js";
-import "./App.css";
+//import "./App.css";
 const historyOfCommands = [];
-const historyOfResponses = [
+let historyOfResponses = [
   {
     type: LineType.Output,
     value:
@@ -12,15 +12,18 @@ const historyOfResponses = [
   },
 ];
 
-const App = () => {
+const App = (props) => {
   const [terminalLineData, setTerminalLineData] = useState(historyOfResponses);
+  document.title = "Fares's Portfolio";
   // Terminal has 100% width by default so it should usually be wrapped in a container div
+  console.log("props", props.style);
   return (
-    <div>
+    <div className="container">
       <Terminal
         name="Welcome to my portfolio! 👋🏽"
         colorMode={ColorMode.Dark}
         lineData={terminalLineData}
+        react-
         onInput={(terminalInput) => {
           historyOfResponses.push({
             type: LineType.Input,
@@ -35,7 +38,8 @@ const App = () => {
                   "There are 3 different commands: \n" +
                   "- profile: to talk about myself and who I am 👤\n" +
                   "- exp: where I present my professional experiences 💼\n" +
-                  "- school: where I present my academic path 🏫.",
+                  "- school: where I present my academic path 🏫.\n" +
+                  "- clear: to clear the terminal 🧹",
               });
               setTerminalLineData(historyOfResponses);
               break;
@@ -45,9 +49,23 @@ const App = () => {
                 value:
                   "Hi 👋🏽, my name is Fares, and I'm a backend software engineer!\n" +
                   "I love challenges, and live for the thrill of solving problems!\n" +
-                  //'If you wish to contact me, please reach out via email: <a href="mailto:kissoumfares@gmail.com">here!</a>\n' +
                   "So far, I've had the opportunity to work in 2 different organizations.\n" +
                   "Please type 'exp' to see my professional experience 💼\n",
+              });
+              historyOfResponses.push({
+                type: LineType.Output,
+                // @ts-ignore
+                value: (
+                  <div>
+                    <a href="mailto:kissoumfares@gmail.com">
+                      If you want to send a mail 📧, click here!
+                    </a>
+                    <br />
+                    <a href="tel:00330782169458">
+                      Unless you want to call 📞, and in that case click here!
+                    </a>
+                  </div>
+                ),
               });
               setTerminalLineData(historyOfResponses);
               break;
@@ -96,6 +114,10 @@ const App = () => {
               historyOfResponses.push(...schoolTitles);
               setTerminalLineData(historyOfResponses);
               break;
+            case terminalInput === "clear":
+              historyOfResponses = [];
+              setTerminalLineData(historyOfResponses);
+              break;
             default:
               historyOfResponses.push({
                 type: LineType.Output,
@@ -105,8 +127,6 @@ const App = () => {
               });
               setTerminalLineData(historyOfResponses);
               break;
-          }
-          if (terminalInput.startsWith("exp")) {
           }
         }}
       />
