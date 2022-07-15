@@ -25,6 +25,8 @@ body {
 
 .react-terminal {
   height: 100vh;
+  max-height: 100%;
+  max-width: 100%;
   overflow: auto;
   display: flex;
   flex-direction: column;
