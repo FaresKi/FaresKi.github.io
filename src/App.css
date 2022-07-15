@@ -5,14 +5,6 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
-}
-
-body {
   width: 100vw;
   height: 100vh;
   max-height: 100%;
@@ -23,8 +15,13 @@ body {
   overscroll-behavior-y: none;
 }
 
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+
 .react-terminal {
-  height: 100vh;
+  height: 100vh !important;
   max-height: 100%;
   max-width: 100%;
   overflow: auto;
